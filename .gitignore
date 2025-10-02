@@ -9,4 +9,20 @@
 
 # rspec failure tracking
 .rspec_status
+
+# Gem build artifacts
+*.gem
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local configuration
 CLAUDE.local.md
