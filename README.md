@@ -60,6 +60,23 @@ ThreadAdvisor.configure do |c|
 end
 ```
 
+## Quick Start
+
+See the [example directory](example/) for runnable examples:
+
+```bash
+# Basic measurement with different workload types
+ruby -Ilib example/basic_measurement.rb
+
+# JSON output format
+ruby -Ilib example/json_output.rb
+
+# High-precision measurement with gvl_timing
+bundle exec ruby -Ilib example/with_gvl_timing.rb
+```
+
+Check out the [example README](example/README.md) for detailed documentation of all examples.
+
 ## Usage
 
 ### 1. Block Measurement
