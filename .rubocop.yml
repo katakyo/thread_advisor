@@ -1,8 +1,80 @@
 AllCops:
-  TargetRubyVersion: 3.1
+  NewCops: enable
+  TargetRubyVersion: 3.2
+  SuggestExtensions: false
+  Exclude:
+    - 'vendor/**/*'
+    - 'tmp/**/*'
 
+# Metrics
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+    - '*.gemspec'
+
+Metrics/MethodLength:
+  Max: 25
+  Exclude:
+    - 'lib/thread_advisor/formatter.rb'
+    - 'lib/thread_advisor/measure.rb'
+
+Metrics/AbcSize:
+  Max: 25
+  Exclude:
+    - 'lib/thread_advisor/measure.rb'
+    - 'lib/thread_advisor/formatter.rb'
+
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Metrics/PerceivedComplexity:
+  Max: 10
+
+# Layout
+Layout/LineLength:
+  Max: 120
+  Exclude:
+    - '*.gemspec'
+
+# Style
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 
 Style/StringLiteralsInInterpolation:
   EnforcedStyle: double_quotes
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+
+# Short parameter names are acceptable in mathematical contexts
+Naming/MethodParameterName:
+  AllowedNames:
+    - 'p'   # I/O ratio (percentage)
+    - 'n'   # Thread count (number)
+    - 'v'   # Value
+    - 'lo'  # Lower bound
+    - 'hi'  # Upper bound
+    - 'x'   # Generic mathematical variable
+
+# Allow manual min/max for clarity in constraint logic
+Style/ComparableClamp:
+  Enabled: false
+
+# Format string style preference
+Style/FormatString:
+  Enabled: false
+
+# Development dependencies in gemspec are acceptable
+Gemspec/DevelopmentDependencies:
+  Enabled: false
+
+# Duplicate branches may be intentional for clarity
+Lint/DuplicateBranch:
+  Enabled: false
+
+# Lint
+Lint/UselessAssignment:
+  Enabled: true
