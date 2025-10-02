@@ -17,7 +17,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency "activesupport", ">= 7.2"
   spec.add_dependency "railties", ">= 7.2"
 
+  spec.add_development_dependency "gvl_timing"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "gvl_timing"
+  spec.metadata["rubygems_mfa_required"] = "true"
 end

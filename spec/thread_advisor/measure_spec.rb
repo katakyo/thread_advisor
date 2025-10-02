@@ -89,7 +89,7 @@ RSpec.describe ThreadAdvisor::Measure do
         end
 
         it "blends with historical data" do
-          _result, metrics = described_class.call("test_task") do
+          _result, = described_class.call("test_task") do
             "result"
           end
 

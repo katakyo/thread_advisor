@@ -6,7 +6,7 @@ module ThreadAdvisor
 
     # @param name [String, nil] Identifier for logging
     # @return [Array] [block_result, metrics_hash]
-    def call(name = nil, &blk)
+    def call(name = nil)
       has_gvl = try_require_gvl_timing
 
       if has_gvl
@@ -17,14 +17,13 @@ module ThreadAdvisor
         # Total = running + idle + stalled
         wall = timer.running_duration + timer.idle_duration + timer.stalled_duration
         metrics = {
-          wall:  wall,
-          cpu:   timer.running_duration,
-          io:    timer.idle_duration,
+          wall: wall,
+          cpu: timer.running_duration,
+          io: timer.idle_duration,
           stall: timer.stalled_duration,
           io_ratio: safe_ratio(timer.idle_duration, wall),
           avg_gvl_stall_ms: timer.stalled_duration * 1000.0
         }
-        [result, finalize(name, metrics)]
       else
         # Approximation: io ≈ wall - cpu
         cpu0  = Process.clock_gettime(Process::CLOCK_THREAD_CPUTIME_ID)
@@ -45,8 +44,8 @@ module ThreadAdvisor
           io_ratio: safe_ratio(io, wall),
           avg_gvl_stall_ms: nil
         }
-        [result, finalize(name, metrics)]
       end
+      [result, finalize(name, metrics)]
     end
 
     def finalize(name, metrics)
@@ -101,11 +100,13 @@ module ThreadAdvisor
 
     def safe_ratio(num, den)
       return 0.0 if den.nil? || den <= 0
-      [[num.to_f / den.to_f, 0.0].max, 1.0].min
+
+      [[num.to_f / den, 0.0].max, 1.0].min
     end
 
     def try_require_gvl_timing
       return true if defined?(::GVLTiming)
+
       require "gvl_timing"
       true
     rescue LoadError

@@ -8,9 +8,9 @@ module ThreadAdvisor
     # @return [String] Formatted string
     def self.format_stdout(data)
       lines = []
-      lines << "=" * 60
+      lines << ("=" * 60)
       lines << "ThreadAdvisor Report: #{data[:name]}"
-      lines << "=" * 60
+      lines << ("=" * 60)
       lines << ""
 
       # Timing metrics
@@ -28,7 +28,9 @@ module ThreadAdvisor
         lines << "  Samples:      #{data[:perfm_history][:history_samples]}"
         lines << "  Weight:       #{format_decimal(data[:perfm_history][:history_weight])}"
         lines << "  Blended I/O:  #{format_percent(data[:perfm_history][:io_ratio])}"
-        lines << "  Blended Stall: #{format_decimal(data[:perfm_history][:stall_ms])} ms" if data[:perfm_history][:stall_ms]
+        if data[:perfm_history][:stall_ms]
+          lines << "  Blended Stall: #{format_decimal(data[:perfm_history][:stall_ms])} ms"
+        end
         lines << ""
       end
 
@@ -52,27 +54,30 @@ module ThreadAdvisor
       lines << "  Hard Cap:            #{reasons[:hard_cap]}"
       lines << "  Env Cap:             #{reasons[:env_cap]}" if reasons[:env_cap]
       lines << "  GVL Stall (avg):     #{format_decimal(reasons[:gvl_avg_stall_ms])} ms" if reasons[:gvl_avg_stall_ms]
-      lines << "  GVL Stall (limit):   #{format_decimal(reasons[:stall_threshold_ms])} ms" if reasons[:stall_threshold_ms]
+      if reasons[:stall_threshold_ms]
+        lines << "  GVL Stall (limit):   #{format_decimal(reasons[:stall_threshold_ms])} ms"
+      end
       lines << ""
-      lines << "=" * 60
+      lines << ("=" * 60)
 
       lines.join("\n")
     end
 
-    private
-
     def self.format_time(seconds)
       return "N/A" unless seconds
+
       "#{format_decimal(seconds)}s"
     end
 
     def self.format_percent(ratio)
       return "N/A" unless ratio
+
       "#{(ratio * 100).round(1)}%"
     end
 
     def self.format_decimal(value, precision = 2)
       return "N/A" unless value
+
       "%.#{precision}f" % value
     end
   end

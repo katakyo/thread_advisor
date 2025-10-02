@@ -24,8 +24,8 @@ module ThreadAdvisor
 
     # Public API for measurement
     # @return [[result, metrics_hash]]
-    def measure(name = nil, &blk)
-      ThreadAdvisor::Measure.call(name, &blk)
+    def measure(name = nil, &)
+      ThreadAdvisor::Measure.call(name, &)
     end
 
     # Log helper for JSON output

@@ -45,7 +45,7 @@ module ThreadAdvisor
     def compute_caps
       db_pool = detect_db_pool_size
       cpu_core_cap = (Etc.nprocessors * @cfg.core_multiplier).floor
-      env_cap = (ENV["PUMA_MAX_THREADS"] || ENV["RAILS_MAX_THREADS"])&.to_i
+      env_cap = (ENV["PUMA_MAX_THREADS"] || ENV.fetch("RAILS_MAX_THREADS", nil))&.to_i
       hard = @cfg.hard_max_threads
 
       upper = [db_pool, cpu_core_cap, env_cap, hard].compact.min
@@ -60,7 +60,7 @@ module ThreadAdvisor
       else
         5
       end
-    rescue
+    rescue StandardError
       5
     end
 
@@ -80,18 +80,14 @@ module ThreadAdvisor
       prev = table.first.speedup
       table.drop(1).each do |pt|
         inc = (pt.speedup - prev) / prev
-        if inc >= thr
-          best_n = pt.n
-          prev = pt.speedup
-        else
-          break
-        end
+        break unless inc >= thr
+
+        best_n = pt.n
+        prev = pt.speedup
       end
 
       # GVL stall consideration (reduce by 1 if measured stall is too high)
-      if @avg_gvl_stall_ms && @avg_gvl_stall_ms > @cfg.max_avg_gvl_stall_ms
-        best_n = [1, best_n - 1].max
-      end
+      best_n = [1, best_n - 1].max if @avg_gvl_stall_ms && @avg_gvl_stall_ms > @cfg.max_avg_gvl_stall_ms
 
       # Finally, cap within the upper limit
       [best_n, caps[:upper]].min

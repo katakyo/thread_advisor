@@ -16,7 +16,7 @@ module ThreadAdvisor
         average_stall_ms: summary[:average_stall_ms],
         sample_count: summary[:sample_count]
       }
-    rescue => e
+    rescue StandardError
       # If Perfm fails, gracefully return nil
       nil
     end
@@ -36,10 +36,11 @@ module ThreadAdvisor
       history_weight = Math.sqrt(sample_count)
       total_weight = 1.0 + history_weight
 
-      blended_io_ratio = (current_io_ratio + (history[:total_io_percentage] || 0.0) / 100.0 * history_weight) / total_weight
+      history_io = (history[:total_io_percentage] || 0.0) / 100.0
+      blended_io_ratio = (current_io_ratio + (history_io * history_weight)) / total_weight
 
       blended_stall_ms = if current_stall_ms && history[:average_stall_ms]
-                           (current_stall_ms + history[:average_stall_ms] * history_weight) / total_weight
+                           (current_stall_ms + (history[:average_stall_ms] * history_weight)) / total_weight
                          else
                            current_stall_ms || history[:average_stall_ms]
                          end
