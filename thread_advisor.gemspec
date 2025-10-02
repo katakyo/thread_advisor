@@ -16,8 +16,8 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "activesupport", ">= 7.2"
   spec.add_dependency "railties", ">= 7.2"
-  spec.add_dependency "perfm"
 
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "gvl_timing"
 end

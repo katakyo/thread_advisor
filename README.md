@@ -209,7 +209,13 @@ Decision Factors:
 - Ruby 3.2+
 - Rails 7.2+
 - ActiveSupport/Railties
-- Perfm (included as dependency)
+
+### Optional Dependencies
+
+- **Perfm** (optional): For historical metrics integration. Install separately: `gem 'perfm'`
+- **gvl_timing** (optional): For high-precision GVL measurements. Install separately: `gem 'gvl_timing'`
+
+If these gems are not installed, ThreadAdvisor will fall back to approximation methods.
 
 ## Development
 

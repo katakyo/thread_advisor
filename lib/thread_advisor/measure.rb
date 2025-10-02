@@ -11,16 +11,20 @@ module ThreadAdvisor
 
       if has_gvl
         # High precision (stall/idle/running) measurement
-        timer = ::GVLTiming.measure(&blk)
+        result = nil
+        timer = ::GVLTiming.measure { result = yield }
+        # GVLTiming::Timer has: running_duration, idle_duration, stalled_duration methods
+        # Total = running + idle + stalled
+        wall = timer.running_duration + timer.idle_duration + timer.stalled_duration
         metrics = {
-          wall:  timer.total,
-          cpu:   timer.running,
-          io:    timer.idle,
-          stall: timer.stalled,
-          io_ratio: safe_ratio(timer.idle, timer.total),
-          avg_gvl_stall_ms: timer.stalled * 1000.0
+          wall:  wall,
+          cpu:   timer.running_duration,
+          io:    timer.idle_duration,
+          stall: timer.stalled_duration,
+          io_ratio: safe_ratio(timer.idle_duration, wall),
+          avg_gvl_stall_ms: timer.stalled_duration * 1000.0
         }
-        [timer.result, finalize(name, metrics)]
+        [result, finalize(name, metrics)]
       else
         # Approximation: io ≈ wall - cpu
         cpu0  = Process.clock_gettime(Process::CLOCK_THREAD_CPUTIME_ID)
