@@ -146,7 +146,7 @@ end
 
 ## Perfm Integration
 
-ThreadAdvisor integrates with the [Perfm](https://github.com/Shopify/perfm) gem to provide historical stability:
+ThreadAdvisor integrates with the [Perfm](https://github.com/bigbinary/perfm) gem to provide historical stability:
 
 - **Automatic History Fetching**: Uses `Perfm::GvlMetricsAnalyzer` to fetch historical metrics
 - **Weighted Blending**: Combines current measurement with historical data using `sqrt(sample_count)` weighting
@@ -229,8 +229,8 @@ Decision Factors:
 
 ### Optional Dependencies
 
-- **Perfm** (optional): For historical metrics integration. Install separately: `gem 'perfm'`
-- **gvl_timing** (optional): For high-precision GVL measurements. Install separately: `gem 'gvl_timing'`
+- **[Perfm](https://github.com/bigbinary/perfm)** (optional): For historical metrics integration. Install separately: `gem 'perfm'`
+- **[gvl_timing](https://github.com/ivoanjo/gvl-tracing)** (optional): For high-precision GVL measurements. Install separately: `gem 'gvl_timing'`
 
 If these gems are not installed, ThreadAdvisor will fall back to approximation methods.
 
