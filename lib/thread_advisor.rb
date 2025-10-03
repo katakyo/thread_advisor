@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 require "etc"
-require "active_support"
-require "active_support/core_ext"
+require "json"
 require_relative "thread_advisor/version"
 require_relative "thread_advisor/config"
 require_relative "thread_advisor/perfm_adapter"
@@ -31,7 +30,7 @@ module ThreadAdvisor
     # Log helper for JSON output
     def log_json(hash)
       logger = config.logger || Logger.new($stdout)
-      logger.info(hash.to_json)
+      logger.info(JSON.generate(hash))
     end
   end
 end
